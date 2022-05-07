@@ -60,10 +60,10 @@ resource "aws_security_group" "mtc_sg" {
   vpc_id      = aws_vpc.mtc_vpc.id
 
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1" # all
-    cidr_blocks = ["192.168.122.0/24", "192.168.100.0/24"]
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1" # all
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -76,24 +76,25 @@ resource "aws_security_group" "mtc_sg" {
 
 # https://sa-east-1.console.aws.amazon.com/ec2/v2/home?region=sa-east-1#KeyPairs:
 resource "aws_key_pair" "mtc_auth" {
-  key_name = "mtckey"
+  key_name   = "mtckey"
   public_key = file("~/.ssh/mtckey.pub")
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
 resource "aws_instance" "dev_node" {
-  instance_type = "t2.micro"
-  ami = data.aws_ami.server_ami.id
+  instance_type          = "t2.micro"
+  ami                    = data.aws_ami.server_ami.id
+  key_name               = aws_key_pair.mtc_auth.key_name #could also be .id
+  vpc_security_group_ids = [aws_security_group.mtc_sg.id]
+  subnet_id              = aws_subnet.mtc_public_subnet.id
+  user_data              = file("userdata.tpl")
+
+  root_block_device {
+    volume_size = 10 //defaults to 8
+  }
 
   tags = {
     Name = "dev_node"
   }
 
-  key_name = aws_key_pair.mtc_auth.key_name #could also be .id
-  vpc_security_group_ids = [aws_security_group.mtc_sg.id]
-  subnet_id = aws_subnet.mtc_public_subnet.id
-
-  root_block_device {
-    volume_size = 10 //defaults to 8
-  }
 }
