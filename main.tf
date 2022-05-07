@@ -60,9 +60,9 @@ resource "aws_security_group" "mtc_sg" {
   vpc_id      = aws_vpc.mtc_vpc.id
 
   ingress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1" # all
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1" # all
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -97,14 +97,14 @@ resource "aws_instance" "dev_node" {
     Name = "dev_node"
   }
 
+  # https://www.terraform.io/language/resources/provisioners/syntax
   provisioner "local-exec" {
-    command = templatefile("unix-ssh-config.tpl", {
-      hostname = self.public_ip,
-      user     = "ubuntu",
+    command = templatefile("${var.host_os}-ssh-config.tpl", {
+      hostname     = self.public_ip,
+      user         = "ubuntu",
       identityfile = "~/.ssh/mtckey",
     })
-    interpreter = ["bash", "-c"]
-    # intepreter = ["PowerShell", "-Command"]
+    interpreter = var.host_os == "windows" ? ["PowerShell", "-Command"] : ["bash", "-c"]
 
   }
 
