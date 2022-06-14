@@ -6,6 +6,7 @@ terraform {
   }
 }
 
+// Baixe a extensão do vscode e crie uma credencial com nome "vscode"
 provider "aws" {
   region                   = "sa-east-1"
   shared_credentials_files = ["~/.aws/credentials"]
