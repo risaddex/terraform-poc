@@ -81,7 +81,7 @@ resource "aws_key_pair" "mtc_auth" {
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
-resource "aws_instance" "dev_node" {
+resource "aws_instance"  "github_actions_instance" {
   instance_type          = "t2.micro"
   ami                    = data.aws_ami.server_ami.id
   key_name               = aws_key_pair.mtc_auth.key_name #could also be .id
@@ -90,6 +90,7 @@ resource "aws_instance" "dev_node" {
   user_data = var.is_github_workflows_instance ? templatefile("github-actions.tpl", {
     github_workflows_token = var.github_workflows_token,
     github_pat             = var.github_pat,
+    repo_or_org_name       = var.repo_or_org_name,
   }) : file("userdata.tpl")
 
   root_block_device {
@@ -97,7 +98,7 @@ resource "aws_instance" "dev_node" {
   }
 
   tags = {
-    Name = "dev_node"
+    Name = "github_actions_instance"
   }
 
   # https://www.terraform.io/language/resources/provisioners/syntax

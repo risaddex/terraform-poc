@@ -22,3 +22,9 @@ variable "is_github_workflows_instance" {
   default     = true
   description = "Indica se esta instância deve rodar o github workflows "
 }
+
+variable "repo_or_org_name" {
+  type        = string
+  default     = ""
+  description = "Organização ou repositório que vai rodar esse workflow. Ex: minha-org ou minha-org/meu-repo"
+}

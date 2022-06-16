@@ -12,7 +12,7 @@ tar xzf ./actions-runner-linux-x64-2.293.0.tar.gz
 # Create the runner and start the configuration experience
 ./config.sh \
   --unattended \
-  --url https://github.com/evo-repos  \
+  --url https://github.com/${repo_or_org_name} \
   --token ${github_workflows_token} \
   --name evo-services-runner_AWS \
   --pat ${github_pat}
