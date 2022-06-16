@@ -19,6 +19,7 @@ resource "aws_subnet" "mtc_public_subnet" {
   tags = {
     Name = "dev_public"
   }
+  depends_on = [aws_internet_gateway.mtc_internet_gateway]
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/internet_gateway
@@ -97,6 +98,7 @@ resource "aws_instance" "dev_node" {
     Name = "dev_node"
   }
 
+
   # https://www.terraform.io/language/resources/provisioners/syntax
   provisioner "local-exec" {
     command = templatefile("${var.host_os}-ssh-config.tpl", {
@@ -108,4 +110,9 @@ resource "aws_instance" "dev_node" {
 
   }
 
+}
+
+resource "aws_eip" "eip" {
+  instance = aws_instance.dev_node.id
+  vpc      = true
 }

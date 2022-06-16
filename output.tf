@@ -12,3 +12,10 @@ output "dev_dns" {
   description = "DNS publico"
   depends_on  = []
 }
+
+output "elastic_ip" {
+  value       = aws_eip.eip.public_ip
+  sensitive   = false
+  description = "IP Elástico"
+  depends_on  = []
+}
