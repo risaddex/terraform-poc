@@ -5,3 +5,10 @@ output "dev_ip" {
   description = "ip de desenvolvimento"
   depends_on  = []
 }
+
+output "dev_dns" {
+  value       = aws_instance.dev_node.public_dns
+  sensitive   = false # se deve ser informação sentitiva ou não
+  description = "DNS publico"
+  depends_on  = []
+}
