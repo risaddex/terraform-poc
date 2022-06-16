@@ -1,2 +1,5 @@
 # terraform console -var-file=dev.tfvars
-host_os = "pepega"
+# para verificar as variáveis:
+# > "${var.host_os}"
+
+host_os = "unix"
